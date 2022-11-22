@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: note-app-production
+  labels:
+    app: note-app-production
+spec:
+  replicas: 2
+  selector: 
+    matchLabels:
+     app: note-app-production
+  template:
+    metadata:
+      labels:
+        app: note-app-production
+    spec:
+      containers:
+      - name:  note-app-production
+        image: 0352730247/note-app:tagVersion
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+        ports:
+        - containerPort: 4000
+      nodeName: ip-10-0-102-46.us-east-2.compute.internal  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: note-app-production
+spec:
+  selector:
+    app: note-app-production
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+      nodePort: 31000
