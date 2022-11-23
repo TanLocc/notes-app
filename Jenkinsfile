@@ -1,4 +1,5 @@
 pipeline {
+  agent any
   environment{
         DOCKER_IMAGE = '0352730247/note-app'
         dockerTag = getLatestCommitId()
