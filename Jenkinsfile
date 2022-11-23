@@ -11,10 +11,13 @@ pipeline {
     stage('Build EKS'){
 
       steps {
-          sh "terraform --version"
           script{
             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentail', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
               sh "aws cloudformation create-stack --stack-name buildeks --template-body build-eks.yaml"
+              sh "aws eks update-kubeconfig --region us-east-1 --name sym-es-qa-sre-jenkins-eks --profile default"
+              sh "aws configure list"
+              sh "kubectl cluster-info"
+              sh "kubectl config set-context --current --namespace=default"          
             }
          }
       }
