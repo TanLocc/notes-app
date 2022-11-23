@@ -5,54 +5,35 @@ pipeline {
         devIp = '3.17.4.180'
         k8sFolder = 'note-app-master'
     }
-  agent {
-    kubernetes {
-      label 'jenkins'
-      defaultContainer 'jnlp'
-      yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-labels:
-  component: ci
-spec:
-  # Use service account that can deploy to all namespaces
-  serviceAccountName: jenkins-admin
-  containers:
-  - name: docker
-    image: docker:latest
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-sock
-  nodeName: ip-10-0-102-46.us-east-2.compute.internal    
-  volumes:
-    - name: docker-sock
-      hostPath:
-        path: /var/run/docker.sock
-"""
-}
-    }
+  
   stages {
+    stage('Build EKS'){
+
+      steps {
+          script{
+            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentail', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+              sh "aws cloudformation create-stack --stack-name buildeks --template-body build-eks.yaml"
+            }
+         }
+      }
+    }
 
     stage('Buid and Push') {
       steps {
         // git 'https://github.com/TanLocc/node-app.git'
-        container('docker') {
-          script{
-            sh "docker build . --network=host -t ${DOCKER_IMAGE}:latest"
-            // def runCmd = "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}"
-            // sh "${runCmd}"
-            withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
-              sh "docker login -u 0352730247 -p ${dockerHubPwd}"
-            }   
-            sh "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}"
-            sh "docker push ${DOCKER_IMAGE}:${dockerTag}"
-            sh "docker push ${DOCKER_IMAGE}:latest"
-          }
+      
+        script{
+          sh "docker build . --network=host -t ${DOCKER_IMAGE}:latest"
+          // def runCmd = "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}"
+          // sh "${runCmd}"
+          withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
+            sh "docker login -u 0352730247 -p ${dockerHubPwd}"
+          }   
+          sh "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}"
+          sh "docker push ${DOCKER_IMAGE}:${dockerTag}"
+          sh "docker push ${DOCKER_IMAGE}:latest"
         }
+        
       }
     }
     stage('Deploy'){
