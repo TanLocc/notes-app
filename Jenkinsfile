@@ -13,7 +13,7 @@ pipeline {
       steps {
           script{
             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentail', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-              sh "aws cloudformation create-stack --stack-name buildeks --template-body build-eks.yaml"
+              sh "aws cloudformation deploy  --template-file build-eks.yml  --stack-name "build-eks" --parameter-overrides EKSIAMRoleName=eks-role EKSClusterName=capstone --capabilities CAPABILITY_NAMED_IAM"
               sh "aws eks update-kubeconfig --region us-east-1 --name sym-es-qa-sre-jenkins-eks --profile default"
               sh "aws configure list"
               sh "kubectl cluster-info"
