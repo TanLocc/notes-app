@@ -51,7 +51,6 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /docker-entrypoint-initdb.d
-      nodeName: ip-10-0-101-19.us-east-2.compute.internal
       volumes:
       - name: mysql-persistent-storage
         configMap:
