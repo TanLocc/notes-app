@@ -221,9 +221,9 @@ Resources:
     DependsOn: LaunchTemplate
     Properties:
       ClusterName: !Ref ClusterName
-        LaunchTemplate:
-          Id: !Ref LaunchTemplate
-          Version: 1
+      LaunchTemplate:
+        Id: !Ref LaunchTemplate
+        Version: 1
       NodeRole: !GetAtt NodeInstanceRole.Arn
       ScalingConfig:
         MinSize: !Ref NodeAutoScalingGroupMinSize
