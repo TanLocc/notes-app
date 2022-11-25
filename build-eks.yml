@@ -168,6 +168,7 @@ Resources:
     Metadata:
       Comment: Subnet 01
     Properties:
+      MapPublicIpOnLaunch: true
       AvailabilityZone:
         !Select [ "0", [ "us-east-1a", "us-east-1b"] ]
       CidrBlock:
@@ -182,6 +183,7 @@ Resources:
     Metadata:
       Comment: Subnet 02
     Properties:
+      MapPublicIpOnLaunch: true
       AvailabilityZone:
         !Select [ "1", [ "us-east-1a", "us-east-1b"] ]
       CidrBlock:
@@ -196,6 +198,7 @@ Resources:
     Metadata:
       Comment: Subnet 03
     Properties:
+      MapPublicIpOnLaunch: true
       AvailabilityZone:
         !Select [ "0", [ "us-east-1a", "us-east-1b"] ]
       CidrBlock:
@@ -212,6 +215,7 @@ Resources:
     Metadata:
       Comment: Private Subnet 02
     Properties:
+      MapPublicIpOnLaunch: true
       AvailabilityZone:
         !Select [ "1", [ "us-east-1a", "us-east-1b"] ]
       CidrBlock:
@@ -258,8 +262,6 @@ Resources:
         SecurityGroupIds:
         - !Ref ControlPlaneSecurityGroup
         SubnetIds:
-        - !Ref PublicSubnet01
-        - !Ref PublicSubnet02
         - !Ref PrivateSubnet01
         - !Ref PrivateSubnet02
     DependsOn: [EKSIAMRole, PublicSubnet01, PublicSubnet02, PrivateSubnet01, PrivateSubnet02, ControlPlaneSecurityGroup]

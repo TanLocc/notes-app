@@ -54,12 +54,12 @@ Parameters:
 
   NodeAutoScalingGroupMaxSize:
     Type: Number
-    Default: 4
+    Default: 6
     Description: Maximum size of Node Group ASG. Set to at least 1 greater than NodeAutoScalingGroupDesiredCapacity.
 
   NodeAutoScalingGroupMinSize:
     Type: Number
-    Default: 1
+    Default: 3
     Description: Minimum size of Node Group ASG.
 
   NodeGroupName:
@@ -203,55 +203,35 @@ Resources:
       SourceSecurityGroupId: !Ref ClusterControlPlaneSecurityGroup
       ToPort: 443
 
-  NodeLaunchConfig:
-    Type: "AWS::AutoScaling::LaunchConfiguration"
+  LaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
     Properties:
-      AssociatePublicIpAddress: "true"
-      BlockDeviceMappings:
-        - DeviceName: /dev/xvda
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: !Ref NodeVolumeSize
-            VolumeType: gp2
-      IamInstanceProfile: !Ref NodeInstanceProfile
-      ImageId: !If
-        - HasNodeImageId
-        - Ref: NodeImageId
-        - Ref: NodeImageIdSSMParam
-      InstanceType: !Ref NodeInstanceType
-      KeyName: !Ref KeyName
-      SecurityGroups:
-        - Ref: NodeSecurityGroup
-      UserData: !Base64
-        "Fn::Sub": |
-          #!/bin/bash
-          set -o xtrace
-          /etc/eks/bootstrap.sh ${ClusterName} ${BootstrapArguments}
-          /opt/aws/bin/cfn-signal --exit-code $? \
-                   --stack  ${AWS::StackName} \
-                   --resource NodeGroup  \
-                   --region ${AWS::Region}
+      LaunchTemplateName: !Sub ${ClusterName}-Launch-Template
+      LaunchTemplateData:
+        ImageId: !If
+          - HasNodeImageId
+          - Ref: NodeImageId
+          - Ref: NodeImageIdSSMParam
+        InstanceType: !Ref NodeInstanceType
+
+    
 
   NodeGroup:
-    Type: "AWS::AutoScaling::AutoScalingGroup"
+    Type: 'AWS::EKS::Nodegroup'
+    DependsOn: LaunchTemplate
     Properties:
-      DesiredCapacity: !Ref NodeAutoScalingGroupDesiredCapacity
-      LaunchConfigurationName: !Ref NodeLaunchConfig
-      MaxSize: !Ref NodeAutoScalingGroupMaxSize
-      MinSize: !Ref NodeAutoScalingGroupMinSize
+      ClusterName: !Ref ClusterName
+        LaunchTemplate:
+          Id: !Ref LaunchTemplate
+          Version: 1
+      NodeRole: !GetAtt NodeInstanceRole.Arn
+      ScalingConfig:
+        MinSize: !Ref NodeAutoScalingGroupMinSize
+        DesiredSize: !Ref NodeAutoScalingGroupDesiredCapacity
+        MaxSize: !Ref NodeAutoScalingGroupMaxSize
       Tags:
-        - Key: Name
-          PropagateAtLaunch: "true"
-          Value: !Sub ${ClusterName}-${NodeGroupName}-Node
-        - Key: !Sub kubernetes.io/cluster/${ClusterName}
-          PropagateAtLaunch: "true"
-          Value: owned
-      VPCZoneIdentifier: !Ref Subnets
-    UpdatePolicy:
-      AutoScalingRollingUpdate:
-        MaxBatchSize: "1"
-        MinInstancesInService: !Ref NodeAutoScalingGroupDesiredCapacity
-        PauseTime: PT5M
+          Name: !Sub ${ClusterName}-${NodeGroupName}-Node
+      Subnets: !Ref Subnets
 
 Outputs:
   NodeInstanceRole:
