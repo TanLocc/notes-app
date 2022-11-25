@@ -5,7 +5,7 @@
     },
     {
         "ParameterKey": "NodeGroupName",
-        "ParameterValue": "i-named-this-bucket-98765"
+        "ParameterValue": "groupWorker"
     },
     {
         "ParameterKey": "KeyName",
