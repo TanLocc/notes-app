@@ -225,7 +225,7 @@ Resources:
         Id: !Ref LaunchTemplate
         Version: 1
       NodeRole: !GetAtt NodeInstanceRole.Arn
-      Scalin!Ref LaunchTemplate
+      ScalingConfig:
         MinSize: !Ref NodLaunchTemplateoupMinSize
         DesiredS!GetAtt NodeInstanceRole.ArnupDesiredCapacity
         MaxSize: !Ref NodeAutoScalingGroupMaxSize
