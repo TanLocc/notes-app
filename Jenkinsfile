@@ -31,7 +31,7 @@ pipeline {
                   NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM
                 """)
                 
-                sh "aws eks update-kubeconfig --region us-east-1 --name capstone --profile default"
+                sh "aws eks update-kubeconfig --region us-east-1 --name capstone"
                 sh "aws configure list"
                 sh "kubectl cluster-info"
                 sh "kubectl config set-context --current --namespace=default"          
@@ -65,10 +65,6 @@ pipeline {
                 sh "./changeTag.sh ${dockerTag}"
               
                sshagent(['server-keypair']) {
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@${devIp} rm -rf ${k8sFolder}"
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@${devIp} mkdir ${k8sFolder}"
-                    sh "scp -o StrictHostKeyChecking=no mysql-deployment.yaml note-app-deployment.yaml ubuntu@${devIp}:/home/ubuntu/${k8sFolder}/"
-
                     script{
                         try {
                             sh "ssh ubuntu@${devIp} kubectl apply -f ${k8sFolder}/"
