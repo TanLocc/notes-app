@@ -1,6 +1,14 @@
 [
    {
-        "ParameterKey": "BucketName",
+        "ParameterKey": "ClusterName",
+        "ParameterValue": "capstone"
+    },
+    {
+        "ParameterKey": "NodeGroupName",
         "ParameterValue": "i-named-this-bucket-98765"
+    },
+    {
+        "ParameterKey": "KeyName",
+        "ParameterValue": "micro"
     }
 ]
