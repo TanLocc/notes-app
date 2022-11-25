@@ -4,7 +4,7 @@ pipeline {
         DOCKER_IMAGE = '0352730247/note-app'
         dockerTag = getLatestCommitId()
         devIp = '3.17.4.180'
-        k8sFolder = 'note-app-master'
+        k8sFolder = 'deployk8s'
         VPC_ID=''
         security_Group=''
         subnets=''
@@ -64,14 +64,14 @@ pipeline {
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${dockerTag}"
               
-               sshagent(['server-keypair']) {
-                    script{
+                script{
+                  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentail', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                         try {
-                            sh "ssh ubuntu@${devIp} kubectl apply -f ${k8sFolder}/"
+                            sh "kubectl apply -f ${k8sFolder}/"
                         } catch(error) {
-                            sh "ssh ubuntu@${devIp} kubectl create -f ${k8sFolder}/"
+                            sh "kubectl create -f ${k8sFolder}/"
                         }
-                    }
+                  }
                 }
             }
   }
