@@ -7,7 +7,7 @@ pipeline {
         k8sFolder = 'note-app-master'
         VPC_ID=''
         securityGroup=''
-        Subnets=''
+        subnets=''
     }
   
   stages {
@@ -23,7 +23,7 @@ pipeline {
               sh "echo ${VPC_ID}"
               sh "echo ${security_Group}"
               sh "echo ${subnets}"
-              sh "aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-nodenode --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${security_Group} ClusterName=capstone KeyName=micro Subnets=${Subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM"
+              sh "aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-nodenode --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${security_Group} ClusterName=capstone KeyName=micro Subnets=${subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM"
               sh "aws eks update-kubeconfig --region us-east-1 --name capstone --profile default"
               sh "aws configure list"
               sh "kubectl cluster-info"
