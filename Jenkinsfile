@@ -92,7 +92,7 @@ def getSubnets(){
 }
 
 def createNodeWorkes(){
-    sh returnStdout: true, script: "aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-nodenode --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${security_Group} ClusterName=capstone KeyName=micro Subnets=${subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM"
+    sh(returnStdout: true, script: "aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-nodenode --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${security_Group} ClusterName=capstone KeyName=micro Subnets=${subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM").trim()
 }
 
 def getLatestCommitId(){
