@@ -83,6 +83,12 @@ def getSecurityGroups(){
   def SecurityGroups = sh returnStdout: true, script: "aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`SecurityGroups`].OutputValue' --output text"
 	return SecurityGroups
 }
+
+def getSubnets(){
+    def Subnets = sh returnStdout: true, script: "aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`SubnetIds`].OutputValue' --output text"
+	return Subnets
+}
+
 def getLatestCommitId(){
 	def commitId = sh returnStdout: true, script: 'git rev-parse HEAD'
 	return commitId
