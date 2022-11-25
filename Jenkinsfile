@@ -23,7 +23,7 @@ pipeline {
               sh "echo ${VPC_ID}"
               sh "echo ${security_Group}"
               sh "echo ${subnets}"
-              sh "aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-nodenode --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${security_Group} ClusterName=capstone KeyName=micro Subnets=${subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM"
+              createNodeWorkes()
               sh "aws eks update-kubeconfig --region us-east-1 --name capstone --profile default"
               sh "aws configure list"
               sh "kubectl cluster-info"
@@ -89,6 +89,10 @@ def getSecurityGroups(){
 def getSubnets(){
     def Subnets = sh returnStdout: true, script: "aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`SubnetIds`].OutputValue' --output text"
 	return Subnets
+}
+
+def createNodeWorkes(){
+    sh returnStdout: true, script: "aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-nodenode --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${security_Group} ClusterName=capstone KeyName=micro Subnets=${subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM"
 }
 
 def getLatestCommitId(){
