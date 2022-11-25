@@ -25,7 +25,7 @@ pipeline {
                 sh "echo ${subnets}"
                 
                 sh(script:"""
-                  aws cloudformation deploy  --template-file build-node.yml  --stack-name build-node --parameter-overrides VpcId=\'${VPC_ID}\' \
+                  aws cloudformation deploy  --template-file build-node.yml  --stack-name build-nodes --parameter-overrides VpcId=\'${VPC_ID}\' \
                   ClusterControlPlaneSecurityGroup=\'${ClusterControlPlaneSecurityGroup}\' ClusterName=capstone KeyName=micro Subnets=\'${subnets}\' \
                   NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM
                 """)
