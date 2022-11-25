@@ -226,14 +226,14 @@ Resources:
         Version: 1
       NodeRole: !GetAtt NodeInstanceRole.Arn
       ScalingConfig:
-        MinSize: !Ref NodLaunchTemplateoupMinSize
-        DesiredS!GetAtt NodeInstanceRole.ArnupDesiredCapacity
+        MinSize: !Ref NodeAutoScalingGroupMinSize
+        DesiredSize: !Ref NodeAutoScalingGroupDesiredCapacity
         MaxSize: !Ref NodeAutoScalingGroupMaxSize
-      Tags:NodeAutoScaNodeAutoScalingGroupMinSize
+      Tags:
           Name: !Sub ${ClusterName}-${NodeGroupName}-Node
-      Subnets: !Ref SuNodeAutoScalingGroupMaxSize
+      Subnets: !Ref Subnets
 
-Outputs  true"
+Outputs:
   NodeInstanceRole:
     Description: The node instance role
     Value: !GetAtt NodeInstanceRole.Arn
