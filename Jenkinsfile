@@ -6,6 +6,8 @@ pipeline {
         devIp = '3.17.4.180'
         k8sFolder = 'note-app-master'
         VPC_ID=''
+        securityGroup=''
+        Subnets=''
     }
   
   stages {
