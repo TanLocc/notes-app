@@ -25,9 +25,7 @@ pipeline {
               sh "echo ${subnets}"
               
               sh """
-                aws cloudformation deploy  --template-file build-node.yml  --stack-name build-node --parameter-overrides \
-                VpcId=${VPC_ID} ClusterControlPlaneSecurityGrou=${security_Group} ClusterName=capstone \
-                KeyName=micro Subnets=${subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM
+                aws cloudformation deploy  --template-file build-node.yml  --stack-name build-node --parameter-overrides file://param.json
               """
               
               sh "aws eks update-kubeconfig --region us-east-1 --name capstone --profile default"
