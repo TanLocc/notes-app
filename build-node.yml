@@ -203,19 +203,6 @@ Resources:
       SourceSecurityGroupId: !Ref ClusterControlPlaneSecurityGroup
       ToPort: 443
 
-  LaunchTemplate:
-    Type: "AWS::EC2::LaunchTemplate"
-    Properties:
-      LaunchTemplateName: !Sub ${ClusterName}-Launch-Template
-      LaunchTemplateData:
-        ImageId: !If
-          - HasNodeImageId
-          - Ref: NodeImageId
-          - Ref: NodeImageIdSSMParam
-        InstanceType: !Ref NodeInstanceType
-
-    
-
   NodeGroup:
     Type: 'AWS::EKS::Nodegroup'
     Properties:

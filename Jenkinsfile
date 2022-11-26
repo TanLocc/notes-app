@@ -9,8 +9,16 @@ pipeline {
         security_Group=''
         subnets=''
     }
-  
+    
+
   stages {
+  
+    stage('Notes-app lint') {
+      steps {
+        make lint
+      }
+    }    
+  
     stage('Build EKS'){
 
       steps {
@@ -42,12 +50,9 @@ pipeline {
 
     stage('Buid and Push') {
       steps {
-        // git 'https://github.com/TanLocc/node-app.git'
       
         script{
           sh "docker build . --network=host -t ${DOCKER_IMAGE}:latest"
-          // def runCmd = "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}"
-          // sh "${runCmd}"
           withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
             sh "docker login -u 0352730247 -p ${dockerHubPwd}"
           }   
