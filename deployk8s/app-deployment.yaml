@@ -5,7 +5,12 @@ metadata:
   labels:
     app: note-app-production
 spec:
-  replicas: 2
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 20%
   selector: 
     matchLabels:
      app: note-app-production
