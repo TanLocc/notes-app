@@ -15,8 +15,8 @@ pipeline {
   
     stage('Notes-app lint') {
       steps {
-        sh "make install"
-        sh "make lint"
+        sh "sudo make install"
+        sh "sudo make lint"
       }
     }    
   
