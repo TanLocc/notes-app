@@ -15,6 +15,7 @@ pipeline {
   
     stage('Notes-app lint') {
       steps {
+        make install
         make lint
       }
     }    
