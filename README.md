@@ -50,7 +50,7 @@ npm start
   - export subnets=$(aws cloudformation describe-stacks --stack-name build-eks --query Stacks[0].Outputs[?OutputKey==`SubnetIds`].OutputValue --output text)
   - aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-node --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${ClusterControlPlaneSecurityGroup} ClusterName=capstone KeyName=micro Subnets=${Subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM
 
-*Build anh push imageimage
+*Build anh push image
     - docker build .  -t ${DOCKER_IMAGE}:latest
     - docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}
     - docker push ${DOCKER_IMAGE}:${dockerTag}
