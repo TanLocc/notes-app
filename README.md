@@ -51,12 +51,12 @@ npm start
   - aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-node --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${ClusterControlPlaneSecurityGroup} ClusterName=capstone KeyName=micro Subnets=${Subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM
 
 *Build anh push imageimage
-    docker build .  -t ${DOCKER_IMAGE}:latest
-    docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}
-    docker push ${DOCKER_IMAGE}:${dockerTag}
-    docker push ${DOCKER_IMAGE}:latest
+    - docker build .  -t ${DOCKER_IMAGE}:latest
+    - docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:${dockerTag}
+    - docker push ${DOCKER_IMAGE}:${dockerTag}
+    - docker push ${DOCKER_IMAGE}:latest
 
 *Build app on eks
-    chmod +x changeTag.sh
-    ./changeTag.sh ${dockerTag}
-    kubectl apply -f deployk8s
+    - chmod +x changeTag.sh
+    - ./changeTag.sh ${dockerTag}
+    - kubectl apply -f deployk8s
