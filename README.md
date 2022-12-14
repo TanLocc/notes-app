@@ -44,11 +44,11 @@ npm start
 ##### Running on eks
 
 *Build eks and node workeworkers
-aws cloudformation deploy --template-file build-eks.yml --stack-name build-eks --parameter-overrides EKSIAMRoleName=eks-role EKSClusterName=capstone --capabilities CAPABILITY_NAMED_IAM
-    export VPC_ID=$(aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`VpcId`].OutputValue' --output text)
-    export ClusterControlPlaneSecurityGroup=$(aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`SecurityGroups`].OutputValue' --output text)
-    export subnets=$(aws cloudformation describe-stacks --stack-name build-eks --query Stacks[0].Outputs[?OutputKey==`SubnetIds`].OutputValue --output text)
-    aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-node --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${ClusterControlPlaneSecurityGroup} ClusterName=capstone KeyName=micro Subnets=${Subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM
+  - aws cloudformation deploy --template-file build-eks.yml --stack-name build-eks --parameter-overrides EKSIAMRoleName=eks-role EKSClusterName=capstone --capabilities CAPABILITY_NAMED_IAM
+  - export VPC_ID=$(aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`VpcId`].OutputValue' --output text)
+  - export ClusterControlPlaneSecurityGroup=$(aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`SecurityGroups`].OutputValue' --output text)
+  - export subnets=$(aws cloudformation describe-stacks --stack-name build-eks --query Stacks[0].Outputs[?OutputKey==`SubnetIds`].OutputValue --output text)
+  - aws cloudformation deploy  --template-file build-work-node.yml  --stack-name build-work-node --parameter-overrides VpcId=${VPC_ID} ClusterControlPlaneSecurityGroup=${ClusterControlPlaneSecurityGroup} ClusterName=capstone KeyName=micro Subnets=${Subnets} NodeGroupName=groupWorker --capabilities CAPABILITY_NAMED_IAM
 
 *Build anh push imageimage
     docker build .  -t ${DOCKER_IMAGE}:latest
