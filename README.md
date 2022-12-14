@@ -44,7 +44,7 @@ npm start
 ##### Running on eks
 
 *Build eks and node workeworkers
-    aws cloudformation deploy --template-file build-eks.yml --stack-name build-eks --parameter-overrides EKSIAMRoleName=eks-role EKSClusterName=capstone --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation deploy --template-file build-eks.yml --stack-name build-eks --parameter-overrides EKSIAMRoleName=eks-role EKSClusterName=capstone --capabilities CAPABILITY_NAMED_IAM
     export VPC_ID=$(aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`VpcId`].OutputValue' --output text)
     export ClusterControlPlaneSecurityGroup=$(aws cloudformation describe-stacks --stack-name build-eks --query 'Stacks[0].Outputs[?OutputKey==`SecurityGroups`].OutputValue' --output text)
     export subnets=$(aws cloudformation describe-stacks --stack-name build-eks --query Stacks[0].Outputs[?OutputKey==`SubnetIds`].OutputValue --output text)
